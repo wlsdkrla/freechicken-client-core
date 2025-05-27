@@ -1,0 +1,1 @@
+# freechicken-client-core
