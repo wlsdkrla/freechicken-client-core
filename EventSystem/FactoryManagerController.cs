@@ -18,10 +18,7 @@ public class FactoryManagerController : MonoBehaviour
     public GameObject failCanvas;
 
     [Header("Camera")]
-    public CinemachineVirtualCamera mainCam;
-    public CinemachineVirtualCamera managerCam;
-    public CinemachineVirtualCamera managerInCam;
-
+    public CameraManager cameraManager;
     [Header("Audio")]
     public AudioSource hitAudio;
     public AudioSource bgmSuccess;
@@ -33,7 +30,7 @@ public class FactoryManagerController : MonoBehaviour
     public GameObject attackParticle;
 
     private bool isChk;
-
+    [SerializeField] private Transform eggBoxResetTransform;
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -68,8 +65,7 @@ public class FactoryManagerController : MonoBehaviour
     void HandleSuccess()
     {
         successCanvas.SetActive(true);
-        managerInCam.Priority = 2;
-        managerCam.Priority = 1;
+        cameraManager.SetManagerInCamActive();
         Invoke(nameof(ResolveSuccess), 2f);
     }
 
@@ -80,8 +76,7 @@ public class FactoryManagerController : MonoBehaviour
         SwitchToPlayerMode();
         ResetEggBox();
 
-        managerInCam.Priority = 1;
-        mainCam.Priority = 2;
+        cameraManager.SetMainCamActive();
 
         heartAudio.Stop();
         bgmSuccess.Play();
@@ -99,9 +94,7 @@ public class FactoryManagerController : MonoBehaviour
     void ResolveFail()
     {
         failCanvas.SetActive(false);
-        managerCam.Priority = 1;
-        managerInCam.Priority = -1;
-        mainCam.Priority = 2;
+        cameraManager.SetMainCamActive();
 
         SwitchToPlayerMode();
         eggBox.GetComponent<FactoryMoveEggBox>().Speed = 0.1f;
@@ -120,8 +113,10 @@ public class FactoryManagerController : MonoBehaviour
 
     void ResetEggBox()
     {
-        eggBox.transform.SetPositionAndRotation(eggBoxSpawnPos.transform.position,
-            new Quaternion(-0.01884f, -0.70685f, -0.70685f, 0.01884f));
+        eggBox.transform.SetPositionAndRotation(
+            eggBoxResetTransform.position,
+            eggBoxResetTransform.rotation
+        );
         eggBox.GetComponent<FactoryMoveEggBox>().isChk = false;
     }
 
