@@ -25,6 +25,11 @@ public static class PlayerDataManager
         string json = JsonUtility.ToJson(Data, true);
         File.WriteAllText(savePath, json);
     }
+    public static void ApplyData(PlayerData data)
+    {
+        Data = data;
+        Save();
+    }
 
     public static bool IsEnglish => Data.language == "en";
 }
